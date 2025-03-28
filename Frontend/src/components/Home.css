@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Oswald:wght@200..700&display=swap');
+
+.hero-section{
+    height: 100vh;
+    width: 100%;
+    background-color: #0a0a0a;
+    color: white;
+    padding: 2vw 3vw;
+    font-family: "Inter";
+}
+
+nav{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-link{
+    display: flex;
+    align-items: center;
+    gap: 2.6vw;
+}
+
+.Hero-Content{
+    margin-top: 10vw;
+    padding: 2vw 4.5vw;
+}
+
+.Hero-Content h1{
+    font-size: 6vw;
+    line-height: 80px;
+}
+
+.intro-AI{
+    height:100vh;
+    width: 100%;
+    background-color: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 5vw
+}
+
+.intro-2 {
+    height:130vh;
+    width: 100%;
+    position: relative;
+    background-color: #0a0a0a;
+}
+
+.intro-2 video{
+   
+    width: 60%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50% , 0);
+    margin-top: 6vw;
+
+}
