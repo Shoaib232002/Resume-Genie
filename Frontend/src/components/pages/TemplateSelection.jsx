@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const TemplateSelection = ({props}) => {
-    const [selectedImage, setSelectedImage] = useState(null); // Track selected image
-    const navigate = useNavigate(); // React Router's navigation function
+const TemplateSelection = ({ props }) => {
+    const [selectedImage, setSelectedImage] = useState(null);
+    const navigate = useNavigate();
 
     const handleImageClick = (index) => {
-        setSelectedImage(index); // Set the selected image index
+        setSelectedImage(index);
     };
 
     const handleSelectClick = () => {
@@ -14,46 +14,36 @@ const TemplateSelection = ({props}) => {
             alert('Please select a template first!');
             return;
         }
-
-        // Navigate to the appropriate route based on the selected template
         navigate(`/create-resume/${selectedImage}`);
     };
 
     return (
-        <div className='h-screen w-screen bg-[#0a0a0a] text-white'>
-            <div className='w-full text-center pt-5'>
-                <h1 className='text-[3vw] font-semibold'>{props || 'Select any one Template'}</h1>
+        <div className='h-screen w-screen bg-[#0a0a0a] text-white flex flex-col justify-between items-center p-6'>
+            {/* Title */}
+            <h1 className='text-[2vw] font-semibold text-center'>{props || 'Select a Template'}</h1>
+
+            {/* Image Selection - Using Flex to Fit in One Row */}
+            <div className='flex justify-center gap-4 w-full'>
+                {["resume_page-0001.jpg", "resume-3_page-0001.jpg", "resume-2_page-0001.jpg"].map((src, index) => (
+                    <img
+                        key={index}
+                        className={`w-[30%] md:w-[25%] rounded-lg shadow-lg cursor-pointer transition-all duration-300
+                            ${selectedImage === index ? 'border-blue-500 border-4 scale-105' : 'border-gray-600 border-2'}
+                            hover:scale-105 hover:border-blue-400`}
+                        src={`/images/${src}`}
+                        alt={`Template ${index + 1}`}
+                        onClick={() => handleImageClick(index)}
+                    />
+                ))}
             </div>
-            <div className='w-full pt-10 flex gap-[3vw] px-5 cursor'>
-                {/* Add white border when the image is selected */}
-                <img
-                    className={`w-[25%] ${selectedImage === 0 ? 'border-blue-500 border-[3px]' : ''}`}
-                    src="/images/resume_page-0001.jpg"
-                    alt="img"
-                    onClick={() => handleImageClick(0)}
-                />
-                <img
-                    className={`w-[25%] ${selectedImage === 1 ? 'border-blue-500 border-[3px]' : ''}`}
-                    src="/images/resume-3_page-0001.jpg"
-                    alt="img"
-                    onClick={() => handleImageClick(1)}
-                />
-                <img
-                    className={`w-[25%] ${selectedImage === 2 ? 'border-blue-500 border-[3px]' : ''}`}
-                    src="/images/resume-2_page-0001.jpg"
-                    alt="img"
-                    onClick={() => handleImageClick(2)}
-                />
-                
-                
-            </div>
-            <div className='w-full text-center pt-6'>
-                <button
-                    onClick={handleSelectClick}
-                    className='text-black rounded-md font-semibold bg-white px-5 py-2'>
-                    Select
-                </button>
-            </div>
+
+            {/* Select Button */}
+            <button
+                onClick={handleSelectClick}
+                className='bg-white text-black text-lg font-semibold px-6 py-3 rounded-md shadow-lg transition-all duration-300
+                    hover:bg-blue-500 hover:text-white hover:scale-105'>
+                Select
+            </button>
         </div>
     );
 };

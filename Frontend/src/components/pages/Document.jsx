@@ -71,7 +71,7 @@ const Document = () => {
       <nav className="py-[1] px-[2vw] mb-5 flex items-center justify-between z-10">
         <div className="logo flex gap-3 items-center ">
           <div className="bg-white w-4 h-4 rounded-full"></div>
-          <h1 className="font-semibold">Resume.Ai</h1>
+          <h1 className="font-semibold"></h1>
         </div>
         <div className="nav-link font-semibold flex gap-5 z-40">
           <Link to="/">Home</Link>
