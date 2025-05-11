@@ -12,9 +12,32 @@ const RegisterPage = () => {
   const [fullname , setFullName] = useState('');
   const [email ,  setEmail] = useState('');
   const [password ,  setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const validateForm = () => {
+    if (fullname.length < 3) {
+      setError('Full name must be at least 3 characters long');
+      return false;
+    }
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return false;
+    }
+    setError('');
+    return true;
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
     const registerData = {
       fullname: fullname,
       email: email,
@@ -30,14 +53,18 @@ const RegisterPage = () => {
         localStorage.setItem('token' , data.token)
         navigate('/document')
       }
-      setFullName(' ');
-      setEmail(' ');
-      setPassword(' ');
+      setFullName('');
+      setEmail('');
+      setPassword('');
     }
     catch(err){
       console.log(err);
+      if (err.response && err.response.data) {
+        setError(err.response.data.message || 'Registration failed. Please try again.');
+      } else {
+        setError('An error occurred. Please try again.');
+      }
     }
-
   }
 
   return (
@@ -46,6 +73,11 @@ const RegisterPage = () => {
         <h2 className="text-2xl font-bold text-center text-gray-100 mb-6">
           Create an Account
         </h2>
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/20 border border-red-500 text-red-500 rounded-md text-sm">
+            {error}
+          </div>
+        )}
         <form onSubmit={(e)=>{
           submitHandler(e)
         }} className="space-y-6">

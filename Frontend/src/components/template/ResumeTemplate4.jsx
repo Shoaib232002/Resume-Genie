@@ -154,7 +154,7 @@ const ResumeTemplate4 = ({formData}) => {
                     <div className="mb-4">
                     <h3 className="text-xl text-gray-800 font-bold">{ experience.title||'Senior Software Engineer'}</h3>
                     <p className="text-gray-600">{experience.company || 'Tech Innovations'} | {
-                      experience.duration ||'2016 - Present'}</p>
+                      experience.duration ||'2025 - Present'}</p>
                     <ul className="list-disc list-inside text-gray-700 mt-2 space-y-2">
                       <li>{experience.responsibilities || "Developed a scalable e-commerce platform serving over 1 million users."}</li>
                     </ul>
@@ -177,7 +177,7 @@ const ResumeTemplate4 = ({formData}) => {
                   education.map((edu, index) => (
                     <div>
                 <h3 className="text-xl text-gray-800 font-bold">{edu.degree || 'Bachelor of Science in Computer Science'}</h3>
-                <p className="text-gray-600">{edu.institution || 'University of California, Berkeley — Graduated '}{edu.year || 'May 2015'}</p>
+                <p className="text-gray-600">{edu.institution || 'University of California, Berkeley — Graduated '}{edu.year || 'May 2025'}</p>
               </div>
                   ))
                 ):(

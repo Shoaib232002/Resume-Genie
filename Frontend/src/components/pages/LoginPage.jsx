@@ -14,9 +14,11 @@ const LoginPage = () => {
 
   const [loginEmail ,  setLoginEmail] = useState('');
   const [loginPassword ,  setLoginPassword] = useState('');
+  const [error, setError] = useState('');
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setError(''); // Clear any previous errors
     const LoginData = {
       email: loginEmail,
       password: loginPassword
@@ -34,6 +36,17 @@ const LoginPage = () => {
       }
 
     }catch(err){
+      if (err.response) {
+        if (err.response.status === 401) {
+          setError('Incorrect email or password');
+        } else if (err.response.status === 404) {
+          setError('User not found');
+        } else {
+          setError('An error occurred. Please try again.');
+        }
+      } else {
+        setError('Network error. Please check your connection.');
+      }
       console.log(err);
     }
     
@@ -48,6 +61,11 @@ const LoginPage = () => {
         <h2 className="text-2xl font-semibold text-center text-gray-100 mb-6">
         Sign in to your account
         </h2>
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/20 border border-red-500 text-red-500 rounded-md text-sm">
+            {error}
+          </div>
+        )}
         <form onSubmit={(e)=>{
           submitHandler(e)
         }} className="space-y-6">

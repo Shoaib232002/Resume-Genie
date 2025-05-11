@@ -5,7 +5,7 @@ const { registerUser, loginUser, logoutUser, createResume, deleteResume, getProf
 const { isLogIn } = require('../middleware/isLoggedIn');
 
 router.post('/register' , [
-    body('fullname').isLength({min:5}).withMessage('full name must be at least 3 character long'),
+    body('fullname').isLength({min:3}).withMessage('full name must be at least 3 character long'),
     body('email').isEmail().withMessage('invalid email'),
     body('password').isLength({min:6}).withMessage('password must be at least 8 character long')
 ] , registerUser)

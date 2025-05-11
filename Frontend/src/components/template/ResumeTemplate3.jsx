@@ -108,7 +108,7 @@ const ResumeTemplate3 = ({formData}) => {
             <h3 className="text-lg font-semibold text-gray-800">
               { experience.title || 'Lead Software Engineer'}
             </h3>
-            <p className="text-sm text-gray-500">{experience.company || 'XYZ Corp'}| {experience.duration || 'Jan 2020 - Present'}</p>
+            <p className="text-sm text-gray-500">{experience.company || 'XYZ Corp'}| {experience.duration || 'Jan 2025 - Present'}</p>
             <ul className="list-disc pl-6 text-gray-700 mt-2 space-y-1">
               <li>
                {experience.responsibilities || 'Led a team of 10 engineers to create a microservices-based architecture, improving system scalability by 50%.'}
@@ -134,7 +134,7 @@ const ResumeTemplate3 = ({formData}) => {
                 <p className="text-gray-800">
             <strong>{edu.degree || 'Bachelor of Science in Computer Science'}</strong>
             <br />
-            {edu.institution || 'University of California, Berkeley — Graduated '}{edu.year || 'May 2015'}
+            {edu.institution || 'University of California, Berkeley — Graduated '}{edu.year || 'May 2025'}
           </p>
               ))
             ):(<p className="text-gray-700 leading-relaxed">not added yet</p>)
