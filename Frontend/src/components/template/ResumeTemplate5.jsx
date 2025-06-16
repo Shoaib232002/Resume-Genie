@@ -1,35 +1,12 @@
 import React, { useRef } from "react";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import { exportToPDF } from "../../utils/pdfExport";
 
 const ResumeTemplate5 = ({formData}) => {
 
   const resumeRef = useRef();
 
-  const exportToPDF = async () => {
-    const element = resumeRef.current;
-    const canvas = await html2canvas(element, {
-      scale: 2, // Increase resolution
-      useCORS: true,
-      logging: true,
-      x: 0,
-      y: 0,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = 297; // A4 height in mm
-
-    // Automatically scale content to fit one page
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    // Scale down if the content is too tall
-    const scaleFactor = imgHeight > pdfHeight ? pdfHeight / imgHeight : 1;
-
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scaleFactor, imgHeight * scaleFactor);
-    pdf.save("resume.pdf");
+  const handleExportToPDF = () => {
+    exportToPDF(resumeRef, "resume.pdf");
   };
 
   const {name ,title , contact ,skills, languages , summary , workExperience ,certifications , education , projects} = formData 
@@ -145,7 +122,7 @@ const ResumeTemplate5 = ({formData}) => {
     </div>
     <button
         className="bg-white text-black font-semibold py-2 px-4 rounded mb-6 mt-6 hover:bg-blue-600"
-        onClick={exportToPDF}
+        onClick={handleExportToPDF}
       >
         Download PDF
     </button>

@@ -11,7 +11,6 @@ import ResumeTemplate5 from '../template/ResumeTemplate5';
 import ResumeTemplate3 from '../template/ResumeTemplate3';
 import ResumeTemplate2 from '../template/ResumeTemplate2';
 
-
 const Document = () => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState(null); // Store profile data
@@ -109,28 +108,26 @@ const Document = () => {
         </div>
         </div>
         {/* Templates grid */}
-        <div className=" absolute flex flex-col h-screen flex-nowrap overflow-y-auto top-0 right-0">
+        <div className="absolute flex flex-col h-screen flex-nowrap overflow-y-auto top-0 right-0">
           {formData?.map((resume, index) => (
-            <div
-              key={index}     
-            >
-               <div key={index} className="scale-[0.3] -mt-[35vh] -mb-[20vh]">
-              {(() => {
-                switch (resume.layout) {
-                  case '0':
-                    return <ResumeTemplate formData={resume}/>; // Layout 1
-                  case '1':
-                    return <ResumeTemplate4 formData={resume}/>; // Layout 2
-                  case '2':
-                    return <ResumeTemplate3 formData={resume}/>; // Layout 3
-                  case '3':
-                    return <ResumeTemplate2 formData={resume}/>; // Layout 4
-                  case '4':
-                    return <ResumeTemplate5 formData={resume}/>; // Layout 5
-                  default:
-                    return null; // Default case if layout ID doesn't match
-                }
-              })()}
+            <div key={index}>
+              <div key={index} className="scale-[0.4] -mt-[40vh] -mb-[70vh] mr-10">
+                {(() => {
+                  switch (resume.layout) {
+                    case '0':
+                      return <ResumeTemplate formData={resume}/>;
+                    case '1':
+                      return <ResumeTemplate4 formData={resume}/>;
+                    case '2':
+                      return <ResumeTemplate3 formData={resume}/>;
+                    case '3':
+                      return <ResumeTemplate2 formData={resume}/>;
+                    case '4':
+                      return <ResumeTemplate5 formData={resume}/>;
+                    default:
+                      return null;
+                  }
+                })()}
               </div>
             </div>
           ))}
