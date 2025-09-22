@@ -12,7 +12,7 @@ const aiRouter = require('./routes/ai.routes')
 
 // Allow only your frontend's URL
 const corsOptions = {
-  origin:"https://resume-genie-sjhp.vercel.app/", // Allow only this origin
+  origin:"https://resume-genie-sjhp.vercel.app", // Allow only this origin
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
