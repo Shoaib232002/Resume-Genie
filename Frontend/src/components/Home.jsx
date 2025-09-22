@@ -15,17 +15,7 @@ const Home = () => {
 
         gsap.registerPlugin(ScrollTrigger);
 
-        gsap.to(".intro-2 video",{
-            width:"96%",
-            duration: 1,
-            scrollTrigger:{
-              trigger:".intro-2",
-              start:"top 50%",
-              end:"top 5%",
-              scrub: true,
-            }
-        })
-
+        
         const checkLoginStatus = () => {
             const token = localStorage.getItem('token'); // Example of checking user data in local storage
             if (token) {

@@ -1,45 +1,26 @@
 import React, { useRef } from "react";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import { exportToPDF } from "../../utils/pdfExport";
 
 const ResumeTemplate2 = ({formData}) => {
   const resumeRef = useRef();
 
-  const exportToPDF = async () => {
-    const element = resumeRef.current;
-    const canvas = await html2canvas(element, {
-      scale: 2, // Increase resolution
-      useCORS: true,
-      logging: true,
-      x: 0,
-      y: 0,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = 297; // A4 height in mm
-
-    // Automatically scale content to fit one page
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    // Scale down if the content is too tall
-    const scaleFactor = imgHeight > pdfHeight ? pdfHeight / imgHeight : 1;
-
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scaleFactor, imgHeight * scaleFactor);
-    pdf.save("resume.pdf");
+  const handleExportToPDF = () => {
+    exportToPDF(resumeRef, "resume.pdf");
   };
 
   const {name ,title , contact ,skills, languages , summary , workExperience ,certifications , education , projects} = formData
 
 
   return (
-    <div className="bg-black min-h-screen flex flex-col gap-2 items-center p-6">
-      <div
-        ref={resumeRef}
-        className="bg-white w-full max-w-4xl shadow-md rounded-lg p-8 font-sans"
-      >
+    <div className="min-h-screen py-10 flex flex-col items-center justify-center">
+      <div ref={resumeRef}
+        className="bg-white w-full max-w-3xl shadow-md rounded-lg p-8 font-sans"
+        style={{
+          width: "210mm",
+          minHeight: "297mm",
+          padding: "20px",
+          boxSizing: "border-box",
+        }}>
         {/* Header */}
         <div className="border-b border-zinc-400 pb-4">
           <h1 className="text-4xl font-bold text-gray-800">{name || 'John Doe'}</h1>
@@ -190,8 +171,8 @@ const ResumeTemplate2 = ({formData}) => {
         </div>
       </div>
       <button
-        className="bg-white text-black font-semibold py-2 px-4 rounded mb-6 "
-        onClick={exportToPDF}
+        className="bg-white text-black mt-6 font-semibold py-2 px-4 rounded mb-6 hover:bg-blue-600"
+        onClick={handleExportToPDF}
       >
         Download PDF
       </button>

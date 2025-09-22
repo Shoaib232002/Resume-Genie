@@ -1,34 +1,11 @@
 import React, { useRef } from "react";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import { exportToPDF } from "../../utils/pdfExport";
 
 const ResumeTemplate = ({formData}) => {
   const resumeRef = useRef();
 
-  const exportToPDF = async () => {
-    const element = resumeRef.current;
-    const canvas = await html2canvas(element, {
-      scale: 2, // Increase resolution
-      useCORS: true,
-      logging: true,
-      x: 0,
-      y: 0,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = 297; // A4 height in mm
-
-    // Automatically scale content to fit one page
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    // Scale down if the content is too tall
-    const scaleFactor = imgHeight > pdfHeight ? pdfHeight / imgHeight : 1;
-
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scaleFactor, imgHeight * scaleFactor);
-    pdf.save("resume.pdf");
+  const handleExportToPDF = () => {
+    exportToPDF(resumeRef, "resume.pdf");
   };
 
   const {name ,title , contact ,skills, languages , summary , workExperience ,certifications , education , projects} = formData 
@@ -131,6 +108,22 @@ const ResumeTemplate = ({formData}) => {
           }
         </section>
 
+        {/* Certifications */}
+        <section className="mt-6">
+          <h2 className="text-lg font-bold text-gray-800 border-b border-zinc-400 pb-2 mb-4">
+            Certifications
+          </h2>
+          {certifications && certifications.length > 0 ? (
+            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+              {certifications.map((cert, index) => (
+                <li key={index}>{cert}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-700 leading-relaxed">No certifications added yet</p>
+          )}
+        </section>
+
         {/* Projects */}
         <section className="mt-6">
   <h2 className="text-lg font-bold text-gray-800 border-b border-zinc-400 pb-2 mb-4">
@@ -154,10 +147,25 @@ const ResumeTemplate = ({formData}) => {
   )}
 </section>
 
+        {/* Languages */}
+        <section className="mt-6">
+          <h2 className="text-lg font-bold text-gray-800 border-b border-zinc-400 pb-2 mb-4">
+            Languages
+          </h2>
+          {languages && languages.length > 0 ? (
+            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+              {languages.map((language, index) => (
+                <li key={index}>{language}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-700 leading-relaxed">No languages added yet</p>
+          )}
+        </section>
       </div>
       <button
-        className="bg-white  text-black font-semibold py-2 px-4 rounded mt-6 mb-7 "
-        onClick={exportToPDF}
+        className="bg-white text-black mt-6 font-semibold py-2 px-4 rounded mb-6 hover:bg-blue-600"
+        onClick={handleExportToPDF}
       >
         Download PDF
       </button>

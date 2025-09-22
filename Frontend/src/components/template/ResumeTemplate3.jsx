@@ -1,41 +1,18 @@
 import React, { useRef } from "react";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+import { exportToPDF } from "../../utils/pdfExport";
 
 const ResumeTemplate3 = ({formData}) => {
 
   const resumeRef = useRef();
 
-  const exportToPDF = async () => {
-    const element = resumeRef.current;
-    const canvas = await html2canvas(element, {
-      scale: 2, // Increase resolution
-      useCORS: true,
-      logging: true,
-      x: 0,
-      y: 0,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = 210; // A4 width in mm
-    const pdfHeight = 297; // A4 height in mm
-
-    // Automatically scale content to fit one page
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-    // Scale down if the content is too tall
-    const scaleFactor = imgHeight > pdfHeight ? pdfHeight / imgHeight : 1;
-
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth * scaleFactor, imgHeight * scaleFactor);
-    pdf.save("resume.pdf");
+  const handleExportToPDF = () => {
+    exportToPDF(resumeRef, "resume.pdf");
   };
 
   const { 
     name, 
     title, 
-    contact = {}, // Provide default empty object
+    contact = {}, 
     skills, 
     languages, 
     summary, 
@@ -43,14 +20,15 @@ const ResumeTemplate3 = ({formData}) => {
     certifications, 
     education, 
     projects 
-  } = formData || {}; // Handle if formData is undefined
+  } = formData || {};
+
   return (
-    <div className="bg-black p-8 min-h-screen flex justify-center">
-      <div  ref={resumeRef}
-        className="bg-white w-full max-w-3xl shadow-md rounded-lg p-8 font-sans"
+    <div className="bg-black p-8 min-h-screen flex flex-col items-center">
+      <div ref={resumeRef}
+        className="bg-white w-full max-w-3xl shadow-md rounded-lg p-8 font-sans mb-8"
         style={{
-          width: "210mm", // Matches A4 width
-          minHeight: "297mm", // Matches A4 height
+          width: "210mm",
+          minHeight: "297mm",
           padding: "20px",
           boxSizing: "border-box",
         }}>
@@ -59,11 +37,12 @@ const ResumeTemplate3 = ({formData}) => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-gray-800">{name || 'John Doe'}</h1>
-              <p className="text-gray-600">{title || 'Senior Software Engineer'}</p>
+              <p className="text-xl text-gray-600">{title || 'Senior Software Engineer'}</p>
             </div>
             <div className="text-right">
               <p className="text-gray-600">{contact.email || 'John@gmail.com'}</p>
-              <p className="text-gray-600">{contact.phone || '(123) 456-7890 '}</p>
+              <p className="text-gray-600">{contact.phone || '(123) 456-7890'}</p>
+              <p className="text-gray-600">{contact.location || 'City, State'}</p>
               <p className="text-gray-600">{contact.website || 'https://www.linkedin.com/in/'}</p>
             </div>
           </div>
@@ -75,52 +54,57 @@ const ResumeTemplate3 = ({formData}) => {
             Professional Summary
           </h2>
           <p className="text-gray-700 leading-relaxed">
-          { summary || "Experienced Senior Software Engineer with 8+ years of expertise in developing scalable applications and leading teams to success. Proficient in React.js, Node.js, AWS, and modern development methodologies. Passionate about creating efficient solutions that enhance user experience and drive business growth."}
+            {summary || "Results-driven Senior Software Engineer with 8+ years of expertise in full-stack development, specializing in React.js, Node.js, and cloud technologies. Proven track record of delivering scalable applications and leading cross-functional teams. Strong focus on code quality, system architecture, and implementing best practices. Experienced in Agile methodologies and continuous integration/deployment pipelines."}
           </p>
         </section>
 
         {/* Skills Section */}
         <section className="mb-6">
           <h2 className="text-xl font-semibold text-gray-800 border-b border-zinc-400 pb-2 mb-4">
-            Skills
+            Technical Skills
           </h2>
           <div className="grid grid-cols-2 gap-4 text-gray-700">
-    {skills && skills.length > 0 ? (
-      skills.map((skill, index) => (
-        <ul key={`skill-col-${Math.floor(index / 5)}`} className="list-disc pl-6">
-          <li>{skill}</li>
-        </ul>
-      ))
-    ) : (
-      <p className="text-gray-600">No skills added yet.</p>
-    )}
-  </div>
+            {skills && skills.length > 0 ? (
+              skills.map((skill, index) => (
+                <ul key={`skill-col-${Math.floor(index / 5)}`} className="list-disc pl-6">
+                  <li>{skill}</li>
+                </ul>
+              ))
+            ) : (
+              <p className="text-gray-600">No skills added yet.</p>
+            )}
+          </div>
         </section>
 
         {/* Work Experience */}
         <section className="mb-6">
           <h2 className="text-xl font-semibold text-gray-800 border-b border-zinc-400 pb-2 mb-4">
-            Work Experience
+            Professional Experience
           </h2>
           {workExperience && workExperience.length > 0 ? (
             workExperience.map((experience, index) => (
-              <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-800">
-              { experience.title || 'Lead Software Engineer'}
-            </h3>
-            <p className="text-sm text-gray-500">{experience.company || 'XYZ Corp'}| {experience.duration || 'Jan 2025 - Present'}</p>
-            <ul className="list-disc pl-6 text-gray-700 mt-2 space-y-1">
-              <li>
-               {experience.responsibilities || 'Led a team of 10 engineers to create a microservices-based architecture, improving system scalability by 50%.'}
-              </li>
-            </ul>
-          </div>
+              <div key={index} className="mb-6">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {experience.title || 'Lead Software Engineer'}
+                  </h3>
+                  <p className="text-sm text-gray-500">{experience.duration || 'Jan 2025 - Present'}</p>
+                </div>
+                <p className="text-sm text-gray-600">{experience.company || 'XYZ Corp'} | {experience.location || 'City, State'}</p>
+                <ul className="list-disc pl-6 text-gray-700 mt-2 space-y-1">
+                  {experience.responsibilities && Array.isArray(experience.responsibilities) ? (
+                    experience.responsibilities.map((responsibility, idx) => (
+                      <li key={idx}>{responsibility}</li>
+                    ))
+                  ) : (
+                    <li>{experience.responsibilities || 'Led a team of 10 engineers to create a microservices-based architecture, improving system scalability by 50%.'}</li>
+                  )}
+                </ul>
+              </div>
             ))
-          ):(
-            <p className="text-gray-700 leading-relaxed"> Fresher</p>
-          )
-            
-          }
+          ) : (
+            <p className="text-gray-700 leading-relaxed">No work experience added yet</p>
+          )}
         </section>
 
         {/* Education */}
@@ -128,17 +112,28 @@ const ResumeTemplate3 = ({formData}) => {
           <h2 className="text-xl font-semibold text-gray-800 border-b border-zinc-400 pb-2 mb-4">
             Education
           </h2>
-          {
-            education && education.length > 0 ? (
-              education.map((edu, index) => (
-                <p className="text-gray-800">
-            <strong>{edu.degree || 'Bachelor of Science in Computer Science'}</strong>
-            <br />
-            {edu.institution || 'University of California, Berkeley — Graduated '}{edu.year || 'May 2025'}
-          </p>
-              ))
-            ):(<p className="text-gray-700 leading-relaxed">not added yet</p>)
-          }
+          {education && education.length > 0 ? (
+            education.map((edu, index) => (
+              <div key={index} className="mb-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">{edu.degree || 'Bachelor of Science in Computer Science'}</h3>
+                    <p className="text-gray-600">{edu.institution || 'University of California, Berkeley'}</p>
+                  </div>
+                  <p className="text-sm text-gray-500">{edu.year || 'May 2025'}</p>
+                </div>
+                {edu.achievements && (
+                  <ul className="list-disc pl-6 text-gray-700 mt-2">
+                    {edu.achievements.map((achievement, idx) => (
+                      <li key={idx}>{achievement}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-700 leading-relaxed">No education details added yet</p>
+          )}
         </section>
 
         {/* Certifications */}
@@ -146,25 +141,75 @@ const ResumeTemplate3 = ({formData}) => {
           <h2 className="text-xl font-semibold text-gray-800 border-b border-zinc-400 pb-2 mb-4">
             Certifications
           </h2>
-          <ul className="list-disc list-inside text-gray-700">
-            {
-              certifications && certifications.length > 0 ? (certifications.map((cert, index) => (
+          {certifications && certifications.length > 0 ? (
+            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+              {certifications.map((cert, index) => (
                 <li key={index}>{cert}</li>
-              ))
-            ):(<p className="text-gray-700 leading-relaxed">not added yet</p>)
-            }
-          </ul>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-700 leading-relaxed">No certifications added yet</p>
+          )}
+        </section>
+
+        {/* Projects */}
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 border-b border-zinc-400 pb-2 mb-4">
+            Key Projects
+          </h2>
+          {projects && projects.length > 0 ? (
+            projects.map((project, index) => (
+              <div key={index} className="mb-4">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {project.title || 'Project Title'}
+                  </h3>
+                  
+                </div>
+                <p className="text-gray-700 mt-2">
+                  {project.description || 'Project description goes here'}
+                </p>
+                {project.technologies && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Technologies: {project.technologies}
+                  </p>
+                )}
+                {project.link && (
+                  <p className="text-blue-600 mt-1">
+                    <a href={project.link} target="_blank" rel="noopener noreferrer">
+                      {project.link}
+                    </a>
+                  </p>
+                )}
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-700 leading-relaxed">No projects added yet</p>
+          )}
+        </section>
+
+        {/* Languages */}
+        <section className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 border-b border-zinc-400 pb-2 mb-4">
+            Languages
+          </h2>
+          {languages && languages.length > 0 ? (
+            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+              {languages.map((language, index) => (
+                <li key={index}>{language}</li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-700 leading-relaxed">No languages added yet</p>
+          )}
         </section>
       </div>
-      {/* Download Button */}
-      <div className="text-center mt-6">
-        <button
-        className="bg-white  text-black font-semibold py-1 px-4 ml-3 rounded mb-6 "
-        onClick={exportToPDF}
+      <button
+        className="bg-white text-black font-semibold py-3 px-6 rounded-lg hover:bg-blue-600 hover:text-white transition-colors duration-300 shadow-md"
+        onClick={handleExportToPDF}
       >
         Download PDF
       </button>
-        </div>
     </div>
   );
 };

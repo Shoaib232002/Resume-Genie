@@ -1,4 +1,3 @@
-
 import React, { useContext, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ResumeTemplate from '../template/ResumeTemplate';
@@ -279,6 +278,12 @@ const CreateResume = () => {
         alert("You must be logged in to create a resume.");
         return;
       }
+
+      // Validate required fields
+      if (!formData.name || !formData.title) {
+        alert("Please fill in the required fields (Name and Title)");
+        return;
+      }
     
       try {
         const response = await axios.post(
@@ -286,19 +291,31 @@ const CreateResume = () => {
           formData,
           {
             headers: {
-              Authorization: `Bearer ${token}`,  // Add the token in the Authorization header
-              "Content-Type": "application/json",  // Optional: Ensure Content-Type is set to JSON if needed
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             }
           }
         );
     
-        if (response.status === 200) {
-          alert("Resume created successfully");
+        if (response.status === 200 || response.status === 201) {
+          alert("Resume created successfully!");
+          // Optionally redirect to a success page or resume list
+          navigate('/document');
         }
     
       } catch (err) {
-        console.log(err);
-        alert("An error occurred while creating the resume. Please try again.");
+        console.error("Error creating resume:", err);
+        if (err.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          alert(`Error: ${err.response.data.message || 'Failed to create resume'}`);
+        } else if (err.request) {
+          // The request was made but no response was received
+          alert('No response from server. Please check your internet connection.');
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          alert('Error creating resume. Please try again.');
+        }
       }
     };
     
@@ -813,93 +830,78 @@ const CreateResume = () => {
             {/* Projects Section */}
             <div>
               <h2 className="text-lg font-semibold mb-2">Projects</h2>
-              <div className="space-y-4 mb-4">
-                {/* Project Title */}
-                <div>
-                  <label className="block font-semibold mb-1">
-                    Project Title
-                  </label>
-                  <input
-                    type="text"
-                    value={newProject.title}
-                    onChange={(e) =>
-                      setNewProject({ ...newProject, title: e.target.value })
-                    }
-                    placeholder="Project Title"
-                    className="w-full bg-transparent border-[1px] outline-none border-white text-white p-2 rounded-md"
-                  />
-                </div>
-
-                {/* Project Description */}
-                <div>
-                  <label className="block font-semibold mb-1">
-                    Description
-                  </label>
-                  <textarea
-                    value={newProject.description}
-                    onChange={(e) =>
-                      setNewProject({
-                        ...newProject,
-                        description: e.target.value,
-                      })
-                    }
-                    rows="3"
-                    placeholder="Project Description"
-                    className="w-full bg-transparent border-[1px] outline-none border-white text-white p-2 rounded-md"
-                  ></textarea>
-                </div>
-
-                {/* Project Link */}
-                <div>
-                  <label className="block font-semibold mb-1">
-                    Project Link
-                  </label>
-                  <input
-                    type="url"
-                    value={newProject.link}
-                    onChange={(e) =>
-                      setNewProject({ ...newProject, link: e.target.value })
-                    }
-                    placeholder="https://your-project-link.com"
-                    className="w-full bg-transparent border-[1px] outline-none border-white text-white p-2 rounded-md"
-                  />
-                </div>
-
-                {/* Add Project Button */}
-                <button
-                  type="button"
-                  onClick={handleAddProject}
-                  className="bg-white text-black font-semibold px-4 py-2 rounded-md"
-                >
-                  Add Project
-                </button>
-              </div>
-
-              {/* List of Projects */}
-              {/* List of Projects */}
-              <div>
-                {formData.projects.map((project, index) => (
-                  <div key={index} className="project">
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                    {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Project Link
-                      </a>
-                    )}
-                    <button
-                      onClick={() => handleRemoveProject(index)}
-                      className="remove-btn"
-                    >
-                      Remove Project
-                    </button>
+              {formData.projects.map((project, index) => (
+                <div key={index} className="space-y-4 mb-4 p-4 ">
+                  <div>
+                    <label className="block font-semibold mb-1">Project Title</label>
+                    <input
+                      type="text"
+                      value={project.title}
+                      onChange={(e) => {
+                        const updatedProjects = [...formData.projects];
+                        updatedProjects[index] = { ...project, title: e.target.value };
+                        setFormData({ ...formData, projects: updatedProjects });
+                      }}
+                      placeholder="Project Title"
+                      className="w-full bg-transparent border-[1px] outline-none border-white text-white p-2 rounded-md"
+                    />
                   </div>
-                ))}
-              </div>
+
+                  <div>
+                    <label className="block font-semibold mb-1">Description</label>
+                    <textarea
+                      value={project.description}
+                      onChange={(e) => {
+                        const updatedProjects = [...formData.projects];
+                        updatedProjects[index] = { ...project, description: e.target.value };
+                        setFormData({ ...formData, projects: updatedProjects });
+                      }}
+                      rows="3"
+                      placeholder="Project Description"
+                      className="w-full bg-transparent border-[1px] outline-none border-white text-white p-3 rounded-md"
+                    ></textarea>
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold mb-1">Project Link</label>
+                    <input
+                      type="url"
+                      value={project.link}
+                      onChange={(e) => {
+                        const updatedProjects = [...formData.projects];
+                        updatedProjects[index] = { ...project, link: e.target.value };
+                        setFormData({ ...formData, projects: updatedProjects });
+                      }}
+                      placeholder="https://your-project-link.com"
+                      className="w-full bg-transparent border-[1px] outline-none border-white text-white p-2 rounded-md"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveProject(index)}
+                    className="text-red-500 hover:text-red-600"
+                  >
+                    Remove Project
+                  </button>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={() => {
+                  setFormData({
+                    ...formData,
+                    projects: [
+                      ...formData.projects,
+                      { title: "", description: "", link: "" }
+                    ],
+                  });
+                }}
+                className="bg-white text-black font-semibold px-4 py-2 rounded-md mt-4"
+              >
+                Add Project
+              </button>
             </div>
 
             {/* Submit Button */}
